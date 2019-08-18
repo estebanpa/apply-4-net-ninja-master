@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Entity\Invoice.cs" />
     <Compile Include="Entity\InvoiceDetail.cs" />
+    <Compile Include="Entity\Types.cs" />
     <Compile Include="Manager\InvoiceManager.cs" />
     <Compile Include="Mock\InvoiceMock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -14,12 +14,6 @@ namespace ninja.model.Entity {
 
         }
 
-        public enum Types {
-            A,
-            B,
-            C
-        }
-
         /// <summary>
         /// Numero de factura
         /// </summary>
@@ -34,17 +28,26 @@ namespace ninja.model.Entity {
 
         }
 
-        public void AddDetail(InvoiceDetail detail) {
-
+        public void AddDetail(InvoiceDetail detail)
+		{
             this.Detail.Add(detail);
-
         }
 
-        public void DeleteDetails() {
+		public void DeleteDetail(InvoiceDetail detail)
+		{
+			this.Detail.Remove(detail);
+		}
+
+		public void DeleteDetails() {
 
             this.Detail.Clear();
 
         }
+
+		public InvoiceDetail InvoiceDetailById(long id)
+		{
+			return GetDetail().FirstOrDefault(x => x.Id == id);
+		}
 
         /// <summary>
         /// Sumar el TotalPrice de cada elemento del detalle

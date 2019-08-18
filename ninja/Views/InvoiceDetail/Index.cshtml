@@ -1,0 +1,74 @@
+﻿@model IEnumerable<ninja.ViewModels.InvoiceDetailViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Invoice @ViewBag.InvoiceId </h2>
+<h2>Details </h2>
+
+<p>
+    @Html.ActionLink("Create New Invoice Detail", "Create", new { invoiceId = ViewBag.InvoiceId })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Taxes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Amount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UnitPrice)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TotalPrice)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TotalPriceWithTaxes)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Id)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Taxes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Amount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UnitPrice)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TotalPrice)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TotalPriceWithTaxes)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id, ViewBag.InvoiceId}) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id, ViewBag.InvoiceId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id, ViewBag.InvoiceId })
+        </td>
+    </tr>
+}
+
+</table>
+
+<p>
+	@Html.ActionLink("Back to Invoices", "Index", "Invoice", null, null)
+</p>

@@ -19,7 +19,7 @@ namespace ninja.test {
             long id = 1006;
             Invoice invoice = new Invoice() {
                 Id = id,
-                Type = Invoice.Types.A.ToString()
+                Type = Types.A.ToString()
             };
 
             manager.Insert(invoice);
@@ -34,14 +34,14 @@ namespace ninja.test {
 
             InvoiceManager manager = new InvoiceManager();
             long id = 1006;
-            Invoice invoice = new Invoice() {
+            var invoice = new Invoice() {
                 Id = id,
-                Type = Invoice.Types.A.ToString()
+                Type = Types.A.ToString()
             };
 
             invoice.AddDetail(new InvoiceDetail() {
                 Id = id,
-                InvoiceId = id,
+                Invoice = invoice,
                 Description = "Venta insumos varios",
                 Amount = 14,
                 UnitPrice = 4.33
@@ -49,7 +49,7 @@ namespace ninja.test {
 
             invoice.AddDetail(new InvoiceDetail() {
                 Id = id,
-                InvoiceId = 6,
+                Invoice = invoice,
                 Description = "Venta insumos tóner",
                 Amount = 5,
                 UnitPrice = 87
@@ -58,70 +58,166 @@ namespace ninja.test {
             manager.Insert(invoice);
             Invoice result = manager.GetById(id);
 
-            Assert.AreEqual(invoice, result);
+            Assert.AreEqual(invoice.ToString(), result.ToString());
 
         }
 
         [TestMethod]
         public void DeleteInvoice() {
 
-            /*
+			/*
               1- Eliminar la factura con id=4
               2- Comprobar de que la factura con id=4 ya no exista
               3- La prueba tiene que mostrarse que se ejecuto correctamente
             */
 
-            #region Escribir el código dentro de este bloque
+			#region Escribir el código dentro de este bloque
 
-            throw new NotImplementedException();
+			//ARRANGE
+			InvoiceManager manager = new InvoiceManager();
+			var id = 3;
+			Invoice invoice3 = new Invoice()
+			{
+				Id = id,
+				Type = Types.A.ToString()
+			};
 
-            #endregion Escribir el código dentro de este bloque
+			invoice3.AddDetail(new InvoiceDetail()
+			{
+				Id = id,
+				Invoice = invoice3,
+				Description = "Venta insumos varios",
+				Amount = 14,
+				UnitPrice = 4.33
+			});
 
-        }
+			manager.Insert(invoice3);
 
-        [TestMethod]
+			id = 4;
+			Invoice invoice4 = new Invoice()
+			{
+				Id = id,
+				Type = Types.B.ToString()
+			};
+
+			invoice4.AddDetail(new InvoiceDetail()
+			{
+				Id = id,
+				Invoice = invoice4,
+				Description = "Venta insumos varios",
+				Amount = 14,
+				UnitPrice = 4.33
+			});
+
+			id = 5;
+			Invoice invoice5 = new Invoice()
+			{
+				Id = id,
+				Type = Types.C.ToString()
+			};
+
+			invoice4.AddDetail(new InvoiceDetail()
+			{
+				Id = id,
+				Invoice = invoice5,
+				Description = "Venta insumos varios",
+				Amount = 14,
+				UnitPrice = 4.33
+			});
+
+			manager.Insert(invoice5);
+
+			//ACT
+			manager.Delete(invoice4.Id);
+
+			//ASSERT
+			Assert.AreEqual(invoice3, manager.GetById(invoice3.Id));
+			Assert.AreEqual(null, manager.GetById(invoice4.Id));
+			Assert.AreEqual(invoice5, manager.GetById(invoice5.Id));
+
+			#endregion Escribir el código dentro de este bloque
+
+		}
+
+		[TestMethod]
         public void UpdateInvoiceDetail() {
 
-            long id = 1003;
-            InvoiceManager manager = new InvoiceManager();
-            IList<InvoiceDetail> detail = new List<InvoiceDetail>();
 
-            detail.Add(new InvoiceDetail() {
-                Id = 1,
-                InvoiceId = id,
-                Description = "Venta insumos varios",
-                Amount = 14,
-                UnitPrice = 4.33
-            });
+			//ARRANGE
+			InvoiceManager manager = new InvoiceManager();
 
-            detail.Add(new InvoiceDetail() {
-                Id = 2,
-                InvoiceId = id,
-                Description = "Venta insumos tóner",
-                Amount = 5,
-                UnitPrice = 87
-            });
+			long id = 1003;
+			Invoice invoice = new Invoice()
+			{
+				Id = id,
+				Type = Types.A.ToString()
+			};
 
-            manager.UpdateDetail(id, detail);
-            Invoice result = manager.GetById(id);
+			var detail1 = new InvoiceDetail()
+			{
+				Id = 1,
+				Invoice = invoice,
+				Description = "Venta insumos varios",
+				Amount = 14,
+				UnitPrice = 4.33
+			};
 
-            Assert.AreEqual(2, result.GetDetail().Count());
+			invoice.AddDetail(detail1);
 
-        }
+			manager.Insert(invoice);
+
+
+			//ACT
+			IList<InvoiceDetail> detail = new List<InvoiceDetail>();
+
+			var detail2 = new InvoiceDetail()
+			{
+				Id = 2,
+				Invoice = invoice,
+				Description = "Venta insumos tóner",
+				Amount = 5,
+				UnitPrice = 87
+			};
+
+			var detail3 = new InvoiceDetail()
+			{
+				Id = 3,
+				Invoice = invoice,
+				Description = "Venta insumos tóner",
+				Amount = 5,
+				UnitPrice = 87
+			};
+
+			detail.Add(detail2);
+			detail.Add(detail3);
+
+			manager.UpdateDetail(id, detail);
+			Invoice result = manager.GetById(id);
+
+			//ASSERT
+			Assert.AreEqual(false, result.GetDetail().Contains(detail1));
+			Assert.AreEqual(true, result.GetDetail().Contains(detail2));
+			Assert.AreEqual(true, result.GetDetail().Contains(detail3));
+			CollectionAssert.AreEqual(result.GetDetail().ToList(), detail.ToList());
+
+		}
 
         [TestMethod]
         public void CalculateInvoiceTotalPriceWithTaxes() {
 
-            long id = 1005;
+			//ARRANGE
             InvoiceManager manager = new InvoiceManager();
-            Invoice invoice = manager.GetById(id);
+
+			//ACT
+			long id = 1005;
+			Invoice invoice = manager.GetById(id);
 
             double sum = 0;
             foreach(InvoiceDetail item in invoice.GetDetail()) 
                 sum += item.TotalPrice * item.Taxes;
 
-            Assert.AreEqual(sum, invoice.CalculateInvoiceTotalPriceWithTaxes());
-
+			//ASSERT
+			Assert.AreEqual(sum, invoice.CalculateInvoiceTotalPriceWithTaxes());
         }
 
     }

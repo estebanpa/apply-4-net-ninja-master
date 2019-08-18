@@ -39,39 +39,39 @@ namespace ninja.model.Mock {
 
         private void Init() {
 
-            this._db.Add(new Invoice() {
+            this.Insert(new Invoice() {
                 Id = 1000,
-                Type = Invoice.Types.A.ToString()
+                Type = Types.A.ToString()
             });
 
-            this._db.Add(new Invoice() {
+            this.Insert(new Invoice() {
                 Id = 1002,
-                Type = Invoice.Types.B.ToString()
+                Type = Types.B.ToString()
             });
 
             Invoice invoice3 = new Invoice() {
-                Id = 1003, Type = Invoice.Types.A.ToString()
+                Id = 1003, Type = Types.A.ToString()
             };
 
-            invoice3.AddDetail(new InvoiceDetail() { Id = 1, InvoiceId = 3, Amount = 22, Description = "Venta varias", UnitPrice = 98.1 });
+            invoice3.AddDetail(new InvoiceDetail() { Id = 1, Invoice = invoice3, Amount = 22, Description = "Venta varias", UnitPrice = 98.1 });
 
-            this._db.Add(invoice3);
+            this.Insert(invoice3);
 
-            this._db.Add(new Invoice() {
+            this.Insert(new Invoice() {
                 Id = 1004,
-                Type = Invoice.Types.A.ToString()
+                Type = Types.A.ToString()
             });
 
 
             Invoice invoice5 = new Invoice() {
-                Id = 1003, Type = Invoice.Types.A.ToString()
+                Id = 1005, Type = Types.A.ToString()
             };
 
-            invoice5.AddDetail(new InvoiceDetail() { Id = 1001, InvoiceId = 5, Amount = 22, Description = "Venta varias", UnitPrice = 98.1 });
-            invoice5.AddDetail(new InvoiceDetail() { Id = 1002, InvoiceId = 5, Description = "Venta insumos varios", Amount = 14, UnitPrice = 4.33 });
-            invoice5.AddDetail(new InvoiceDetail() { Id = 1003, InvoiceId = 5, Description = "Venta insumos tóner", Amount = 5, UnitPrice = 87 });
+            invoice5.AddDetail(new InvoiceDetail() { Id = 1, Invoice = invoice5, Amount = 22, Description = "Venta varias", UnitPrice = 98.1 });
+            invoice5.AddDetail(new InvoiceDetail() { Id = 2, Invoice = invoice5, Description = "Venta insumos varios", Amount = 14, UnitPrice = 4.33 });
+            invoice5.AddDetail(new InvoiceDetail() { Id = 3, Invoice = invoice5, Description = "Venta insumos tóner", Amount = 5, UnitPrice = 87 });
 
-            this._db.Add(invoice5);
+            this.Insert(invoice5);
 
         }
 
@@ -94,9 +94,10 @@ namespace ninja.model.Mock {
         }
 
         public void Insert(Invoice item) {
-
-            this._db.Add(item);
-
+			if (!this.Exists(item.Id))
+			{
+				this._db.Add(item);
+			}
         }
 
         public Boolean Exists(long id) {
