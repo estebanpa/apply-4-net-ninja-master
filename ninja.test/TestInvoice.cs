@@ -16,7 +16,7 @@ namespace ninja.test {
         public void InsertNewInvoice() {
 
             InvoiceManager manager = new InvoiceManager();
-            long id = 1006;
+            long id = 1007;
             Invoice invoice = new Invoice() {
                 Id = id,
                 Type = Types.A.ToString()
@@ -26,7 +26,6 @@ namespace ninja.test {
             Invoice result = manager.GetById(id);
 
             Assert.AreEqual(invoice, result);
-
         }
 
         [TestMethod]
@@ -58,8 +57,7 @@ namespace ninja.test {
             manager.Insert(invoice);
             Invoice result = manager.GetById(id);
 
-            Assert.AreEqual(invoice.ToString(), result.ToString());
-
+            Assert.AreEqual(invoice, result);
         }
 
         [TestMethod]
