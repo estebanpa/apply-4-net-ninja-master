@@ -31,34 +31,34 @@ namespace ninja.test {
         [TestMethod]
         public void InsertNewDetailInvoice() {
 
-            InvoiceManager manager = new InvoiceManager();
+			//ARRANGE
+			InvoiceManager manager = new InvoiceManager();
             long id = 1006;
             var invoice = new Invoice() {
                 Id = id,
                 Type = Types.A.ToString()
             };
 
-            invoice.AddDetail(new InvoiceDetail() {
+			manager.Insert(invoice);
+			var detailsBeforeInsert = invoice.GetDetail().ToList();
+
+			//ACT
+			var detailToInsert = new InvoiceDetail() {
                 Id = id,
                 Invoice = invoice,
                 Description = "Venta insumos varios",
                 Amount = 14,
                 UnitPrice = 4.33
-            });
+            };
 
-            invoice.AddDetail(new InvoiceDetail() {
-                Id = id,
-                Invoice = invoice,
-                Description = "Venta insumos tóner",
-                Amount = 5,
-                UnitPrice = 87
-            });
+			var invoiceFromManager = manager.GetById(id);
+			invoiceFromManager.AddDetail(detailToInsert);
 
-            manager.Insert(invoice);
-            Invoice result = manager.GetById(id);
+			var detailInserted = invoiceFromManager.GetDetail().FirstOrDefault();
 
-            Assert.AreEqual(invoice, result);
-        }
+			Assert.AreNotEqual(detailsBeforeInsert.Count(), invoiceFromManager.GetDetail().Count());
+			Assert.AreEqual(detailToInsert, detailInserted);
+		}
 
         [TestMethod]
         public void DeleteInvoice() {
