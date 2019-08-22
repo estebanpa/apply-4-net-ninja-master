@@ -56,6 +56,7 @@ namespace ninja.test {
 
 			var detailInserted = invoiceFromManager.GetDetail().FirstOrDefault();
 
+			//ASSERT
 			Assert.AreNotEqual(detailsBeforeInsert.Count(), invoiceFromManager.GetDetail().Count());
 			Assert.AreEqual(detailToInsert, detailInserted);
 		}
